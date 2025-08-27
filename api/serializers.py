@@ -1,9 +1,11 @@
 import logging
+from typing import Any
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from api.models import Answer, Question
+from api.schemas import AnswerCreate
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +49,12 @@ class AnswerCreateSerializer(ModelSerializer):
     class Meta:
         model = Answer
         fields = ["id", "text", "user_id"]
-        read_only_fields = [
-            "id",
-        ]
+        read_only_fields = ["id"]
+
+    def to_internal_value(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Преобразовывает в схему Pydantic для валидации"""
+        try:
+            validated_data = AnswerCreate(**data).model_dump(exclude_unset=True)
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
+        return validated_data

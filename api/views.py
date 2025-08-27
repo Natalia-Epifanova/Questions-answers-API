@@ -1,17 +1,17 @@
 import logging
 import uuid
+from typing import Any
 
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    ListCreateAPIView,
-    RetrieveDestroyAPIView,
-)
+from rest_framework.generics import (CreateAPIView, ListCreateAPIView,
+                                     RetrieveDestroyAPIView)
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from api.models import Answer, Question
-from api.serializers import AnswerCreateSerializer, AnswerSerializer, QuestionSerializer
+from api.serializers import (AnswerCreateSerializer, AnswerSerializer,
+                             QuestionSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +28,12 @@ class QuestionListView(ListCreateAPIView):
     queryset = Question.objects.all().prefetch_related("answers")
     serializer_class = QuestionSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка GET запроса для получения списка вопросов"""
         logger.info("Запрос на получение списка вопросов")
         return super().get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка POST запроса для создания вопроса"""
         logger.info("Запрос на создание нового вопроса")
         response = super().post(request, *args, **kwargs)
@@ -54,13 +54,13 @@ class QuestionDetailView(RetrieveDestroyAPIView):
     queryset = Question.objects.all().prefetch_related("answers")
     serializer_class = QuestionSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка GET запроса для получения деталей вопроса"""
         question_id = kwargs.get("pk")
         logger.info(f"Запрос на получение вопроса ID {question_id}")
         return super().get(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка DELETE запроса для удаления вопроса"""
         question_id = kwargs.get("pk")
         logger.warning(f"Запрос на удаление вопроса ID {question_id}")
@@ -80,7 +80,7 @@ class AnswerCreateView(CreateAPIView):
 
     serializer_class = AnswerCreateSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """
         Обработка POST запроса для создания ответа.
 
@@ -100,7 +100,7 @@ class AnswerCreateView(CreateAPIView):
 
         return super().post(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: AnswerCreateSerializer) -> None:
         """
         Создание ответа с привязкой к вопросу.
 
@@ -129,13 +129,13 @@ class AnswerDetailView(RetrieveDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка GET запроса для получения ответа"""
         answer_id = kwargs.get("pk")
         logger.info(f"Запрос на получение ответа ID {answer_id}")
         return super().get(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Обработка DELETE запроса для удаления ответа"""
         answer_id = kwargs.get("pk")
         logger.warning(f"Запрос на удаление ответа ID {answer_id}")
