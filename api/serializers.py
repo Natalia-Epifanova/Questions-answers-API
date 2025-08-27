@@ -1,5 +1,4 @@
 import logging
-import uuid
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -36,21 +35,6 @@ class QuestionSerializer(ModelSerializer):
         fields = ["id", "text", "created_at", "answers"]
         read_only_fields = ["id", "created_at"]
 
-    def validate_text(self, value):
-        """
-        Валидация текста вопроса.
-        Args:
-            value (str): Текст вопроса для валидации
-        Returns:
-            str: Валидированный текст
-        Raises:
-            ValidationError: Если текст пустой или содержит только пробелы
-        """
-        if not value or not value.strip():
-            logger.warning("Попытка создания вопроса с пустым текстом")
-            raise serializers.ValidationError("Текст вопроса не может быть пустым")
-        return value.strip()
-
 
 class AnswerCreateSerializer(ModelSerializer):
     """
@@ -62,37 +46,7 @@ class AnswerCreateSerializer(ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ["text", "user_id"]
-
-    def validate_user_id(self, value):
-        """
-        Валидация user_id.
-        Args:
-            value (str/UUID): user_id для валидации
-        Returns:
-            UUID: Валидированный UUID
-        Raises:
-            ValidationError: Если передан некорректный формат UUID
-        """
-        if value:
-            try:
-                return uuid.UUID(str(value))
-            except ValueError:
-                logger.warning(f"Некорректный формат UUID: {value}")
-                raise serializers.ValidationError("Некорректный формат UUID")
-        return value
-
-    def validate_text(self, value):
-        """
-        Валидация текста ответа.
-        Args:
-            value (str): Текст ответа для валидации
-        Returns:
-            str: Валидированный текст
-        Raises:
-            ValidationError: Если текст пустой или содержит только пробелы
-        """
-        if not value or not value.strip():
-            logger.warning("Попытка создания ответа с пустым текстом")
-            raise serializers.ValidationError("Текст ответа не может быть пустым")
-        return value.strip()
+        fields = ["id", "text", "user_id"]
+        read_only_fields = [
+            "id",
+        ]

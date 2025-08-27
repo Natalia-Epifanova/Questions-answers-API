@@ -3,13 +3,15 @@ import uuid
 
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.generics import (CreateAPIView, ListCreateAPIView,
-                                     RetrieveDestroyAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    ListCreateAPIView,
+    RetrieveDestroyAPIView,
+)
 from rest_framework.response import Response
 
 from api.models import Answer, Question
-from api.serializers import (AnswerCreateSerializer, AnswerSerializer,
-                             QuestionSerializer)
+from api.serializers import AnswerCreateSerializer, AnswerSerializer, QuestionSerializer
 
 logger = logging.getLogger(__name__)
 

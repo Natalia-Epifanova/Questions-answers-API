@@ -1,8 +1,12 @@
 from django.urls import path
 
 from api.apps import ApiConfig
-from api.views import (AnswerCreateView, AnswerDetailView, QuestionDetailView,
-                       QuestionListView)
+from api.views import (
+    AnswerCreateView,
+    AnswerDetailView,
+    QuestionDetailView,
+    QuestionListView,
+)
 
 app_name = ApiConfig.name
 
